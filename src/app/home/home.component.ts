@@ -1,5 +1,6 @@
 import { Component, OnInit,ViewEncapsulation } from '@angular/core';
 import { trigger, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-home',
@@ -33,11 +34,13 @@ export class HomeComponent implements OnInit {
   goalText: string = 'My first life goal';
   goals = ['My first life goal','Add an Item', 'row teste'];
 
-  constructor() { }
+  constructor(private _data:DataService) { }
 
   ngOnInit() {
     const self = this;
     self.itemCount = self.goals.length;
+    self._data.goal.subscribe(res=>self.goals = res);
+    self._data.changeGoal(self.goals);
   }
 
 
@@ -47,6 +50,7 @@ export class HomeComponent implements OnInit {
       self.goals.push(self.goalText);
       self.goalText = '';
       self.itemCount = self.goals.length;
+      self._data.changeGoal(self.goals);
     } else {
       self.goalText = 'Write an goal';
     }
@@ -56,6 +60,7 @@ export class HomeComponent implements OnInit {
     const self = this;
     self.goals.splice(i,1);
     self.itemCount = self.goals.length;
+    self._data.changeGoal(self.goals);
   }
 
 }
